@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    internal class Functions
+    public class Functions
     {
         public static double MultiplyEvenIndexedElements(double[] array)
         {
