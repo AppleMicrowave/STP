@@ -88,7 +88,7 @@ namespace Lab.Tests
         {
             // Arrange
             double[] array = { 1.0, 2.0, 3.0 };
-            double[] expected = { 2.0, 3.0, 1.0 };
+            double[] expected = { 3.0, 1.0, 2.0 };
 
             // Act
             Functions.CyclicShift(array, 4, "right"); // 4 % 3 = 1
