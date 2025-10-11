@@ -9,6 +9,7 @@
 
 // Добавьте сюда заголовочные файлы для предварительной компиляции
 #include "CppUnitTest.h"
+#include "../../Lab3/Lab3Lib.h"
 
 
 #endif //PCH_H
