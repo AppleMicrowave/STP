@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Lab1\Lab1.csproj" />
     <ProjectReference Include="..\Lab2\Lab2.csproj" />
     <ProjectReference Include="..\Lab4_Matrix\Lab4_Matrix.csproj" />
+    <ProjectReference Include="..\Lab6-P\Lab6-P.csproj" />
   </ItemGroup>
 
 </Project>
