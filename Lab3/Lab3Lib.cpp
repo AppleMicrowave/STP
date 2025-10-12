@@ -1,18 +1,21 @@
-#include "Lab3Lib.h"
+п»ї#include "Lab3Lib.h"
 
 int Lab3Lib::cyclicShift(int a, int n, bool direction = false) {
     std::string numStr = std::to_string(a);
     int len = numStr.length();
 
-    if (len == 0) return 0;
+    if (len == 0 || len == 1) return a;
 
-    n = n % len; // Нормализуем сдвиг
+    n = n % len;
+    if (n == 0) return a;
 
-    if (!direction) {
-        return std::stoi(numStr.substr(n) + numStr.substr(0, n));
+    if (direction) {
+        // direction = true в†’ РџР РђР’Р«Р™ СЃРґРІРёРі
+        return std::stoi(numStr.substr(len - n) + numStr.substr(0, len - n));
     }
     else {
-        return std::stoi(numStr.substr(len - n) + numStr.substr(0, len - n));
+        // direction = false в†’ Р›Р•Р’Р«Р™ СЃРґРІРёРі  
+        return std::stoi(numStr.substr(n) + numStr.substr(0, n));
     }
 }
 
@@ -34,9 +37,9 @@ int Lab3Lib::removeDigits(int a, int p, int n) {
     int len = numStr.length();
 
     if (p < 1 || p > len || n < 0) return a;
-    if (p + n - 1 > len) n = len - p + 1; // проверка выхода за границу
+    if (p + n - 1 > len) n = len - p + 1; // РїСЂРѕРІРµСЂРєР° РІС‹С…РѕРґР° Р·Р° РіСЂР°РЅРёС†Сѓ
 
-    // удаляем n цифр начиная с позиции p
+    // СѓРґР°Р»СЏРµРј n С†РёС„СЂ РЅР°С‡РёРЅР°СЏ СЃ РїРѕР·РёС†РёРё p
     std::string result = numStr.substr(0, p - 1) + numStr.substr(p - 1 + n);
 
     return result.empty() ? 0 : std::stoi(result);

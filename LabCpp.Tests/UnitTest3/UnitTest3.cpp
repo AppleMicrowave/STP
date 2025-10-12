@@ -25,13 +25,13 @@ namespace UnitTest3
         TEST_METHOD(CyclicShift_ShiftMoreThanLength_Left)
         {
             int result = Lab3Lib::cyclicShift(123, 5, false);
-            Assert::AreEqual(231, result); // 5 % 3 = 2
+            Assert::AreEqual(312, result); // Исправить ожидание на 312
         }
 
         TEST_METHOD(CyclicShift_ShiftMoreThanLength_Right)
         {
             int result = Lab3Lib::cyclicShift(123, 5, true);
-            Assert::AreEqual(312, result); // 5 % 3 = 2
+            Assert::AreEqual(231, result); // Исправить ожидание на 231
         }
 
         TEST_METHOD(CyclicShift_ZeroShift_NoChange)
