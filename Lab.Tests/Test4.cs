@@ -1,13 +1,8 @@
-﻿using ConsoleApplicationMatrix;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Lab4_Matrix;
 namespace Lab.Tests
 {
-    internal class Test4
+    [TestClass]
+    public class Test4
     {
         [TestClass]
         public class MatrixTests

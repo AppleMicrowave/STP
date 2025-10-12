@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ConsoleApplicationMatrix
+namespace Lab4_Matrix
 {
     public class MyException : Exception
     {
@@ -90,7 +90,7 @@ namespace ConsoleApplicationMatrix
         }
         public override bool Equals(object obj)
         {
-            return (this as Matrix) == (obj as Matrix);
+            return this as Matrix == obj as Matrix;
         }
     }
 }
