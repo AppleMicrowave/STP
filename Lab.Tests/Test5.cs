@@ -1,4 +1,4 @@
-﻿using Lab4_TPNumber;
+﻿using Lab5_TPNumber;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lab.Tests
