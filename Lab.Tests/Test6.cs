@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lab6_TEditor;
 
 namespace Lab.Tests
 {
     [TestClass]
-    internal class Test6
+    public class Test6
     {
         [TestMethod]
         public void Constructor_Default_SetsZeroRepresentation()

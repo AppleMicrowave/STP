@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab6-TEditor", "Lab6-TEdito
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab.Tests", "..\Lab.Tests\Lab.Tests.csproj", "{8B85557D-998A-D229-D61C-1483C188E048}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab5-P", "..\Lab5-P\Lab5-P.csproj", "{7751B9C4-D718-CF9A-2C7D-508829807D57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8B85557D-998A-D229-D61C-1483C188E048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B85557D-998A-D229-D61C-1483C188E048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B85557D-998A-D229-D61C-1483C188E048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7751B9C4-D718-CF9A-2C7D-508829807D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7751B9C4-D718-CF9A-2C7D-508829807D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7751B9C4-D718-CF9A-2C7D-508829807D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7751B9C4-D718-CF9A-2C7D-508829807D57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
