@@ -1,63 +1,62 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
-namespace Lab6_TEditor
+namespace ComplexNumberEditor
 {
-    public class TEditor
+    public class ComplexNumberEditor
     {
-        private const string DECIMAL_SEPARATOR = ",";
-        private const string IMAGINARY_SEPARATOR = "+i*";
-        private const string ZERO_REPRESENTATION = "0,+i*0,";
+        private const string DecimalSeparator = ",";
+        private const string ImaginarySeparator = "+i*";
+        private const string ZeroRepresentation = "0,+i*0,";
 
-        private string строка;
+        private string _numberString;
 
-        public TEditor()
+        public ComplexNumberEditor()
         {
-            очистить();
-        }
-        public TEditor(string initialString)
-        {
-            писатьСтрокаВформатеСтроки(initialString);
+            Clear();
         }
 
-        public string читатьСтрокаВформатеСтроки
+        public ComplexNumberEditor(string initialString)
         {
-            get { return строка; }
+            SetString(initialString);
         }
 
-        public void писатьСтрокаВформатеСтроки(string value)
+        public string NumberString
+        {
+            get { return _numberString; }
+        }
+
+        public void SetString(string value)
         {
             if (IsValidComplexNumber(value))
             {
-                строка = value;
+                _numberString = value;
             }
             else
             {
-                throw new ArgumentException("Некорректный формат комплексного числа");
+                throw new ArgumentException("Invalid complex number format");
             }
         }
 
-        public bool комплексноеЧислоЕстьНоль
+        public bool IsZero
         {
             get
             {
-                return строка == ZERO_REPRESENTATION;
+                return _numberString == ZeroRepresentation;
             }
         }
 
-        public string добавитьЗнак()
+        public string ToggleSign()
         {
-            // Разделяем на действительную и мнимую части
-            string[] parts = строка.Split(new[] { IMAGINARY_SEPARATOR }, StringSplitOptions.None);
+            string[] parts = _numberString.Split(new[] { ImaginarySeparator }, StringSplitOptions.None);
 
             if (parts.Length == 2)
             {
                 string realPart = parts[0];
                 string imaginaryPart = parts[1];
 
-                // Определяем, какую часть менять (последнюю изменяемую)
                 if (imaginaryPart.Length > 0 && !imaginaryPart.EndsWith(","))
                 {
-                    // Меняем знак мнимой части
                     if (imaginaryPart.StartsWith("-"))
                     {
                         imaginaryPart = imaginaryPart.Substring(1);
@@ -69,7 +68,6 @@ namespace Lab6_TEditor
                 }
                 else if (realPart.Length > 0 && !realPart.EndsWith(","))
                 {
-                    // Меняем знак действительной части
                     if (realPart.StartsWith("-"))
                     {
                         realPart = realPart.Substring(1);
@@ -80,26 +78,25 @@ namespace Lab6_TEditor
                     }
                 }
 
-                строка = realPart + IMAGINARY_SEPARATOR + imaginaryPart;
+                _numberString = realPart + ImaginarySeparator + imaginaryPart;
             }
 
-            return строка;
+            return _numberString;
         }
 
-        public string добавитьЦифру(int digit)
+        public string AddDigit(int digit)
         {
             if (digit < 0 || digit > 9)
-                throw new ArgumentException("Цифра должна быть от 0 до 9");
+                throw new ArgumentException("Digit must be from 0 to 9");
 
             char digitChar = digit.ToString()[0];
-            string[] parts = строка.Split(new[] { IMAGINARY_SEPARATOR }, StringSplitOptions.None);
+            string[] parts = _numberString.Split(new[] { ImaginarySeparator }, StringSplitOptions.None);
 
             if (parts.Length == 2)
             {
                 string realPart = parts[0];
                 string imaginaryPart = parts[1];
 
-                // Определяем, в какую часть добавлять цифру
                 if (CanAddDigit(imaginaryPart))
                 {
                     imaginaryPart += digitChar;
@@ -109,31 +106,29 @@ namespace Lab6_TEditor
                     realPart += digitChar;
                 }
 
-                строка = realPart + IMAGINARY_SEPARATOR + imaginaryPart;
+                _numberString = realPart + ImaginarySeparator + imaginaryPart;
             }
 
-            return строка;
+            return _numberString;
         }
 
-        public string добавитьНоль()
+        public string AddZero()
         {
-            return добавитьЦифру(0);
+            return AddDigit(0);
         }
 
-        public string забойСимвола()
+        public string Backspace()
         {
-            string[] parts = строка.Split(new[] { IMAGINARY_SEPARATOR }, StringSplitOptions.None);
+            string[] parts = _numberString.Split(new[] { ImaginarySeparator }, StringSplitOptions.None);
 
             if (parts.Length == 2)
             {
                 string realPart = parts[0];
                 string imaginaryPart = parts[1];
 
-                // Удаляем из мнимой части, если есть что удалять
                 if (imaginaryPart.Length > 0 && !IsOnlySeparator(imaginaryPart))
                 {
                     imaginaryPart = imaginaryPart.Substring(0, imaginaryPart.Length - 1);
-                    // Если удалили все цифры, оставляем разделитель
                     if (imaginaryPart.EndsWith(",") || imaginaryPart == "-" || imaginaryPart == "")
                     {
                         imaginaryPart = "0,";
@@ -141,55 +136,49 @@ namespace Lab6_TEditor
                 }
                 else if (realPart.Length > 0 && !IsOnlySeparator(realPart))
                 {
-                    // Удаляем из действительной части
                     realPart = realPart.Substring(0, realPart.Length - 1);
-                    // Если удалили все цифры, оставляем разделитель
                     if (realPart.EndsWith(",") || realPart == "-" || realPart == "")
                     {
                         realPart = "0,";
                     }
                 }
 
-                строка = realPart + IMAGINARY_SEPARATOR + imaginaryPart;
+                _numberString = realPart + ImaginarySeparator + imaginaryPart;
             }
 
-            return строка;
+            return _numberString;
         }
 
-        public string очистить()
+        public string Clear()
         {
-            строка = ZERO_REPRESENTATION;
-            return строка;
+            _numberString = ZeroRepresentation;
+            return _numberString;
         }
 
-        public string редактировать(int command)
+        public string Edit(int command)
         {
             switch (command)
             {
-                case 0: return добавитьЗнак();
-                case 1: return добавитьНоль();
-                case 2: return забойСимвола();
-                case 3: return очистить();
+                case 0: return ToggleSign();
+                case 1: return AddZero();
+                case 2: return Backspace();
+                case 3: return Clear();
                 default:
                     if (command >= 10 && command <= 19)
-                        return добавитьЦифру(command - 10);
+                        return AddDigit(command - 10);
                     else
-                        throw new ArgumentException("Неизвестная команда");
+                        throw new ArgumentException("Unknown command");
             }
         }
 
-        // Вспомогательные методы
-
         private bool IsValidComplexNumber(string number)
         {
-            // Простая проверка формата: [знак]число,[знак]число,
             string pattern = @"^-?\d*,(\+i\*|-i\*)-?\d*,$";
-            return Regex.IsMatch(number, pattern) || number == ZERO_REPRESENTATION;
+            return Regex.IsMatch(number, pattern) || number == ZeroRepresentation;
         }
 
         private bool CanAddDigit(string part)
         {
-            // Можно добавить цифру, если часть не заканчивается запятой и не является полным числом
             return !part.EndsWith(",") && part != "0" && part != "-0";
         }
 
@@ -200,7 +189,7 @@ namespace Lab6_TEditor
 
         public override string ToString()
         {
-            return строка;
+            return _numberString;
         }
     }
 }
