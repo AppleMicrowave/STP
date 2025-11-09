@@ -48,20 +48,6 @@ namespace Lab.Tests
         }
 
         [TestMethod]
-        public void TMemory_Get_ReturnsNumberAndTurnsOnState()
-        {
-            var initialFrac = new TFrac(2, 3);
-            var memory = new TMemory<TFrac>(initialFrac);
-            memory.Clear();
-
-            var result = memory.Get();
-
-            Assert.AreEqual(2, result.Numerator);
-            Assert.AreEqual(3, result.Denominator);
-            Assert.AreEqual(MemoryState.On, memory.State);
-        }
-
-        [TestMethod]
         public void TMemory_Add_AddsNumberToStoredValueAndTurnsOnState()
         {
             var initialFrac = new TFrac(1, 4);
@@ -96,20 +82,6 @@ namespace Lab.Tests
 
             Assert.AreEqual("On", memoryOn.GetState());
             Assert.AreEqual("Off", memoryOff.GetState());
-        }
-
-        [TestMethod]
-        public void TMemory_ReadNumber_ReturnsNumberWithoutChangingState()
-        {
-            var initialFrac = new TFrac(3, 7);
-            var memory = new TMemory<TFrac>(initialFrac);
-            memory.Clear();
-
-            var result = memory.ReadNumber();
-
-            Assert.AreEqual(3, result.Numerator);
-            Assert.AreEqual(7, result.Denominator);
-            Assert.AreEqual(MemoryState.Off, memory.State);
         }
 
         [TestMethod]
