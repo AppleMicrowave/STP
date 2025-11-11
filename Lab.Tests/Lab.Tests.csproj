@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Lab6-TEditor\Lab6-TEditor.csproj" />
     <ProjectReference Include="..\Lab7-MN\Lab7-MN.csproj" />
     <ProjectReference Include="..\Lab8\Lab8.csproj" />
+    <ProjectReference Include="..\Lab9\Lab9\Lab9.csproj" />
   </ItemGroup>
 
 </Project>
