@@ -10,6 +10,7 @@ namespace Lab6_TEditor
         private const string ZeroRepresentation = "0,+i*0,";
 
         private string _numberString;
+        private bool _isEditingRealPart = true;
 
         public ComplexNumberEditor()
         {
@@ -55,26 +56,27 @@ namespace Lab6_TEditor
                 string realPart = parts[0];
                 string imaginaryPart = parts[1];
 
-                if (imaginaryPart.Length > 0 && !imaginaryPart.EndsWith(","))
-                {
-                    if (imaginaryPart.StartsWith("-"))
-                    {
-                        imaginaryPart = imaginaryPart.Substring(1);
-                    }
-                    else
-                    {
-                        imaginaryPart = "-" + imaginaryPart;
-                    }
-                }
-                else if (realPart.Length > 0 && !realPart.EndsWith(","))
+            
+                if (_isEditingRealPart)
                 {
                     if (realPart.StartsWith("-"))
                     {
                         realPart = realPart.Substring(1);
                     }
-                    else
+                    else if (realPart != "0,")
                     {
                         realPart = "-" + realPart;
+                    }
+                }
+                else 
+                {
+                    if (imaginaryPart.StartsWith("-"))
+                    {
+                        imaginaryPart = imaginaryPart.Substring(1);
+                    }
+                    else if (imaginaryPart != "0,")
+                    {
+                        imaginaryPart = "-" + imaginaryPart;
                     }
                 }
 
@@ -97,13 +99,27 @@ namespace Lab6_TEditor
                 string realPart = parts[0];
                 string imaginaryPart = parts[1];
 
-                if (CanAddDigit(imaginaryPart))
+                if (_isEditingRealPart)
                 {
-                    imaginaryPart += digitChar;
+                    if (CanAddDigit(realPart))
+                    {
+                        realPart = realPart.Insert(realPart.Length - 1, digitChar.ToString());
+                    }
+                    else if (realPart == "0,")
+                    {
+                        realPart = digitChar + ",";
+                    }
                 }
-                else if (CanAddDigit(realPart))
+                else
                 {
-                    realPart += digitChar;
+                    if (CanAddDigit(imaginaryPart))
+                    {
+                        imaginaryPart = imaginaryPart.Insert(imaginaryPart.Length - 1, digitChar.ToString());
+                    }
+                    else if (imaginaryPart == "0,")
+                    {
+                        imaginaryPart = digitChar + ",";
+                    }
                 }
 
                 _numberString = realPart + ImaginarySeparator + imaginaryPart;
@@ -126,20 +142,34 @@ namespace Lab6_TEditor
                 string realPart = parts[0];
                 string imaginaryPart = parts[1];
 
-                if (imaginaryPart.Length > 0 && !IsOnlySeparator(imaginaryPart))
+                if (_isEditingRealPart && realPart.Length > 2)
                 {
-                    imaginaryPart = imaginaryPart.Substring(0, imaginaryPart.Length - 1);
-                    if (imaginaryPart.EndsWith(",") || imaginaryPart == "-" || imaginaryPart == "")
+
+                    realPart = realPart.Remove(realPart.Length - 2, 1);
+                    if (realPart == "-," || realPart == ",")
+                    {
+                        realPart = "0,";
+                    }
+                }
+                else if (!_isEditingRealPart && imaginaryPart.Length > 2)
+                {
+          
+                    imaginaryPart = imaginaryPart.Remove(imaginaryPart.Length - 2, 1);
+                    if (imaginaryPart == "-," || imaginaryPart == ",")
                     {
                         imaginaryPart = "0,";
                     }
                 }
-                else if (realPart.Length > 0 && !IsOnlySeparator(realPart))
+                else
                 {
-                    realPart = realPart.Substring(0, realPart.Length - 1);
-                    if (realPart.EndsWith(",") || realPart == "-" || realPart == "")
+  
+                    if (_isEditingRealPart && realPart.Length == 2 && realPart != "0,")
                     {
                         realPart = "0,";
+                    }
+                    else if (!_isEditingRealPart && imaginaryPart.Length == 2 && imaginaryPart != "0,")
+                    {
+                        imaginaryPart = "0,";
                     }
                 }
 
@@ -152,6 +182,13 @@ namespace Lab6_TEditor
         public string Clear()
         {
             _numberString = ZeroRepresentation;
+            _isEditingRealPart = true;
+            return _numberString;
+        }
+
+        public string SwitchPart()
+        {
+            _isEditingRealPart = !_isEditingRealPart;
             return _numberString;
         }
 
@@ -163,6 +200,7 @@ namespace Lab6_TEditor
                 case 1: return AddZero();
                 case 2: return Backspace();
                 case 3: return Clear();
+                case 4: return SwitchPart(); 
                 default:
                     if (command >= 10 && command <= 19)
                         return AddDigit(command - 10);
@@ -173,18 +211,14 @@ namespace Lab6_TEditor
 
         private bool IsValidComplexNumber(string number)
         {
-            string pattern = @"^-?\d*,(\+i\*|-i\*)-?\d*,$";
+            string pattern = @"^-?\d*,(\+i\*)-?\d*,$";
             return Regex.IsMatch(number, pattern) || number == ZeroRepresentation;
         }
 
         private bool CanAddDigit(string part)
         {
-            return !part.EndsWith(",") && part != "0" && part != "-0";
-        }
-
-        private bool IsOnlySeparator(string part)
-        {
-            return part == "0," || part == "-0,";
+     
+            return part != "0," && part != "-0," && !part.EndsWith(DecimalSeparator + DecimalSeparator);
         }
 
         public override string ToString()

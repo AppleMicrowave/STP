@@ -9,11 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lab11\Lab11.csproj" />
     <ProjectReference Include="..\Lab1\Lab1.csproj" />
     <ProjectReference Include="..\Lab2\Lab2.csproj" />
     <ProjectReference Include="..\Lab4_Matrix\Lab4_Matrix.csproj" />
     <ProjectReference Include="..\Lab5-P\Lab5-P.csproj" />
-    <ProjectReference Include="..\Lab6-P\Lab6-P.csproj" />
+    <ProjectReference Include="..\Lab6-TEditor\Lab6-TEditor.csproj" />
+    <ProjectReference Include="..\Lab7-MN\Lab7-MN.csproj" />
+    <ProjectReference Include="..\Lab8\Lab8.csproj" />
   </ItemGroup>
 
 </Project>
