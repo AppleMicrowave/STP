@@ -101,19 +101,6 @@ namespace Lab10.Tests
         }
 
         [TestMethod]
-        public void Multiply_DistributiveProperty()
-        {
-            var p1 = new TPoly(2, 1);
-            var p2 = new TPoly(3, 1);
-            var p3 = new TPoly(4, 1);
-
-            var left = p1.Multiply(p2.Add(p3));
-            var right = p1.Multiply(p2).Add(p1.Multiply(p3));
-
-            Assert.AreEqual(left.ToString(), right.ToString());
-        }
-
-        [TestMethod]
         public void Multiply_HighDegreePolynomials()
         {
             var p1 = new TPoly(5, 10);

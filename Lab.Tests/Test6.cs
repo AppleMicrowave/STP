@@ -1,229 +1,151 @@
 ﻿using System;
-using System.Text.RegularExpressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Lab6_TEditor;
 
-namespace Lab6_TEditor
+namespace Lab.Tests
 {
-    public class ComplexNumberEditor
+    [TestClass]
+    public class Test6
     {
-        private const string DecimalSeparator = ",";
-        private const string ImaginarySeparator = "+i*";
-        private const string ZeroRepresentation = "0,+i*0,";
-
-        private string _numberString;
-        private bool _isEditingRealPart = true;
-
-        public ComplexNumberEditor()
+        [TestMethod]
+        public void Constructor_Default_CreatesZeroNumber()
         {
-            Clear();
+            var editor = new ComplexNumberEditor();
+            Assert.AreEqual("0,+i*0,", editor.NumberString);
         }
 
-        public ComplexNumberEditor(string initialString)
+        [TestMethod]
+        public void Constructor_WithValidString_SetsNumber()
         {
-            SetString(initialString);
+            var editor = new ComplexNumberEditor("12,+i*34,");
+            Assert.AreEqual("12,+i*34,", editor.NumberString);
         }
 
-        public string NumberString
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Constructor_WithInvalidString_ThrowsException()
         {
-            get { return _numberString; }
+            var editor = new ComplexNumberEditor("invalid");
         }
 
-        public void SetString(string value)
+        [TestMethod]
+        public void SetString_ValidNumber_UpdatesValue()
         {
-            if (IsValidComplexNumber(value))
-            {
-                _numberString = value;
-            }
-            else
-            {
-                throw new ArgumentException("Invalid complex number format");
-            }
+            var editor = new ComplexNumberEditor();
+            editor.SetString("-5,+i*7,");
+            Assert.AreEqual("-5,+i*7,", editor.NumberString);
         }
 
-        public bool IsZero
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SetString_InvalidNumber_ThrowsException()
         {
-            get
-            {
-                return _numberString == ZeroRepresentation;
-            }
+            var editor = new ComplexNumberEditor();
+            editor.SetString("abc,+i*def,");
         }
 
-        public string ToggleSign()
+        [TestMethod]
+        public void IsZero_ForZeroNumber_ReturnsTrue()
         {
-            string[] parts = _numberString.Split(new[] { ImaginarySeparator }, StringSplitOptions.None);
-
-            if (parts.Length == 2)
-            {
-                string realPart = parts[0];
-                string imaginaryPart = parts[1];
-
-            
-                if (_isEditingRealPart)
-                {
-                    if (realPart.StartsWith("-"))
-                    {
-                        realPart = realPart.Substring(1);
-                    }
-                    else if (realPart != "0,")
-                    {
-                        realPart = "-" + realPart;
-                    }
-                }
-                else 
-                {
-                    if (imaginaryPart.StartsWith("-"))
-                    {
-                        imaginaryPart = imaginaryPart.Substring(1);
-                    }
-                    else if (imaginaryPart != "0,")
-                    {
-                        imaginaryPart = "-" + imaginaryPart;
-                    }
-                }
-
-                _numberString = realPart + ImaginarySeparator + imaginaryPart;
-            }
-
-            return _numberString;
+            var editor = new ComplexNumberEditor("0,+i*0,");
+            Assert.IsTrue(editor.IsZero);
         }
 
-        public string AddDigit(int digit)
+        [TestMethod]
+        public void IsZero_ForNonZeroNumber_ReturnsFalse()
         {
-            if (digit < 0 || digit > 9)
-                throw new ArgumentException("Digit must be from 0 to 9");
-
-            char digitChar = digit.ToString()[0];
-            string[] parts = _numberString.Split(new[] { ImaginarySeparator }, StringSplitOptions.None);
-
-            if (parts.Length == 2)
-            {
-                string realPart = parts[0];
-                string imaginaryPart = parts[1];
-
-                if (_isEditingRealPart)
-                {
-                    if (CanAddDigit(realPart))
-                    {
-                        realPart = realPart.Insert(realPart.Length - 1, digitChar.ToString());
-                    }
-                    else if (realPart == "0,")
-                    {
-                        realPart = digitChar + ",";
-                    }
-                }
-                else
-                {
-                    if (CanAddDigit(imaginaryPart))
-                    {
-                        imaginaryPart = imaginaryPart.Insert(imaginaryPart.Length - 1, digitChar.ToString());
-                    }
-                    else if (imaginaryPart == "0,")
-                    {
-                        imaginaryPart = digitChar + ",";
-                    }
-                }
-
-                _numberString = realPart + ImaginarySeparator + imaginaryPart;
-            }
-
-            return _numberString;
+            var editor = new ComplexNumberEditor("1,+i*0,");
+            Assert.IsFalse(editor.IsZero);
         }
 
-        public string AddZero()
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddDigit_DigitLessThanZero_ThrowsException()
         {
-            return AddDigit(0);
+            var editor = new ComplexNumberEditor();
+            editor.AddDigit(-1);
         }
 
-        public string Backspace()
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddDigit_DigitGreaterThanNine_ThrowsException()
         {
-            string[] parts = _numberString.Split(new[] { ImaginarySeparator }, StringSplitOptions.None);
-
-            if (parts.Length == 2)
-            {
-                string realPart = parts[0];
-                string imaginaryPart = parts[1];
-
-                if (_isEditingRealPart && realPart.Length > 2)
-                {
-
-                    realPart = realPart.Remove(realPart.Length - 2, 1);
-                    if (realPart == "-," || realPart == ",")
-                    {
-                        realPart = "0,";
-                    }
-                }
-                else if (!_isEditingRealPart && imaginaryPart.Length > 2)
-                {
-          
-                    imaginaryPart = imaginaryPart.Remove(imaginaryPart.Length - 2, 1);
-                    if (imaginaryPart == "-," || imaginaryPart == ",")
-                    {
-                        imaginaryPart = "0,";
-                    }
-                }
-                else
-                {
-  
-                    if (_isEditingRealPart && realPart.Length == 2 && realPart != "0,")
-                    {
-                        realPart = "0,";
-                    }
-                    else if (!_isEditingRealPart && imaginaryPart.Length == 2 && imaginaryPart != "0,")
-                    {
-                        imaginaryPart = "0,";
-                    }
-                }
-
-                _numberString = realPart + ImaginarySeparator + imaginaryPart;
-            }
-
-            return _numberString;
+            var editor = new ComplexNumberEditor();
+            editor.AddDigit(10);
         }
 
-        public string Clear()
+        [TestMethod]
+        public void Clear_SetsToZero()
         {
-            _numberString = ZeroRepresentation;
-            _isEditingRealPart = true;
-            return _numberString;
+            var editor = new ComplexNumberEditor("123,+i*456,");
+            var result = editor.Clear();
+            Assert.AreEqual("0,+i*0,", result);
         }
 
-        public string SwitchPart()
+        [TestMethod]
+        public void Edit_Command_Clear()
         {
-            _isEditingRealPart = !_isEditingRealPart;
-            return _numberString;
+            var editor = new ComplexNumberEditor("123,+i*456,");
+            var result = editor.Edit(3);
+            Assert.AreEqual("0,+i*0,", result);
         }
 
-        public string Edit(int command)
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Edit_InvalidCommand_ThrowsException()
         {
-            switch (command)
-            {
-                case 0: return ToggleSign();
-                case 1: return AddZero();
-                case 2: return Backspace();
-                case 3: return Clear();
-                case 4: return SwitchPart(); 
-                default:
-                    if (command >= 10 && command <= 19)
-                        return AddDigit(command - 10);
-                    else
-                        throw new ArgumentException("Unknown command");
-            }
+            var editor = new ComplexNumberEditor();
+            editor.Edit(20);
         }
 
-        private bool IsValidComplexNumber(string number)
+        [TestMethod]
+        public void ToString_ReturnsNumberString()
         {
-            string pattern = @"^-?\d*,(\+i\*)-?\d*,$";
-            return Regex.IsMatch(number, pattern) || number == ZeroRepresentation;
+            var editor = new ComplexNumberEditor("12,+i*34,");
+            Assert.AreEqual("12,+i*34,", editor.ToString());
         }
 
-        private bool CanAddDigit(string part)
+        [TestMethod]
+        public void AddDigit_WhenPartIsZero_DoesNotAdd()
         {
-     
-            return part != "0," && part != "-0," && !part.EndsWith(DecimalSeparator + DecimalSeparator);
+            var editor = new ComplexNumberEditor("0,+i*0,");
+            var result = editor.AddDigit(5);
+            Assert.AreEqual("0,+i*0,", result);
         }
 
-        public override string ToString()
+        [TestMethod]
+        public void AddDigit_WhenPartIsNegativeZero_DoesNotAdd()
         {
-            return _numberString;
+            var editor = new ComplexNumberEditor("-0,+i*0,");
+            var result = editor.AddDigit(5);
+            Assert.AreEqual("-0,+i*0,", result);
+        }
+
+        [TestMethod]
+        public void IsValidComplexNumber_ValidNumbers_ReturnsTrue()
+        {
+            var editor = new ComplexNumberEditor();
+            Assert.IsTrue(IsValidComplexNumberPrivate(editor, "123,+i*456,"));
+            Assert.IsTrue(IsValidComplexNumberPrivate(editor, "-123,+i*456,"));
+            Assert.IsTrue(IsValidComplexNumberPrivate(editor, "123,+i*-456,"));
+            Assert.IsTrue(IsValidComplexNumberPrivate(editor, "-123,+i*-456,"));
+        }
+
+        [TestMethod]
+        public void IsValidComplexNumber_InvalidNumbers_ReturnsFalse()
+        {
+            var editor = new ComplexNumberEditor();
+            Assert.IsFalse(IsValidComplexNumberPrivate(editor, "123,i*456,"));
+            Assert.IsFalse(IsValidComplexNumberPrivate(editor, "123,+i*456"));
+            Assert.IsFalse(IsValidComplexNumberPrivate(editor, "abc,+i*def,"));
+            Assert.IsFalse(IsValidComplexNumberPrivate(editor, "123.45,+i*67.89,"));
+        }
+
+        private bool IsValidComplexNumberPrivate(ComplexNumberEditor editor, string number)
+        {
+            var method = typeof(ComplexNumberEditor).GetMethod("IsValidComplexNumber",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return (bool)method.Invoke(editor, new object[] { number });
         }
     }
 }
